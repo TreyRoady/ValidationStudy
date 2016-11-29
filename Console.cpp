@@ -7,6 +7,8 @@
 #include <ctime>
 #include <cstdlib>
 #include <math.h>
+#include <string>
+#include <sstream>
 
 int myrandom (int i) { return std::rand()%i;} //Random seed for shuff()
 
@@ -24,7 +26,7 @@ std::vector<int> shuff(int n){
 
 	for(int m = 0; m < n; ++m) shuff_vec.push_back(m); // {0, 1, 2, ..., 45}
 
-	std::random_shuffle( shuff_vec.begin(), shuff_vec.end(), myrandom);
+	std::random_shuffle( shuff_vec.begin(), shuff_vec.end(), myrandom );
 	
 	return shuff_vec;
 }
@@ -53,11 +55,15 @@ void present(int sig, int mthd){
 	//  -> This should likely be adapted as a header
 }
 
+int idx(int x, int y) {
+    return y * 10 + x;
+}
+
 int compare(int x, int y,int mthd){
 	//Function returns -1 if x > y, 0 if x == y, 1 if x < y.
 	// Returns -2 if in error.
 
-	char c; //User character response
+	char c;
 	int m;  //Function return value
 	int n=1; //While loop control
 	//While loop to keep presenting signals until an option is checked	
@@ -76,8 +82,7 @@ int compare(int x, int y,int mthd){
 
 		std::cout << "\nSelect any other option to repeat" << std::endl;
 		//Get user response:
-		std::cin >> c;
-		
+        std::cin >> c;
 		switch(toupper(c)){
 			case 'A':
 				m = -1;
@@ -104,8 +109,8 @@ int main()
 {
 	
 	std::vector<int> indx_vec; //Randomized vector of index values
-	std::vector<int> sync_vec; //data vector for syncopated comparisons
-	std::vector<int> mel_vec;  //data vector for melodic comparisons
+	std::vector<int> sync_vec(100,0); //data vector for syncopated comparisons
+	std::vector<int> mel_vec(100,0);  //data vector for melodic comparisons
 	int meth = 1; //Integer marker to set presentation order for signal methods
 		// 1 = Syncopated
 		// 2 = Melodic
@@ -122,8 +127,8 @@ int main()
 		x = calcx(indx_vec[a],n);   //Project randomized index onto x coordinate
 		y = calcy(indx_vec[a],n,x); //Project randomized index onto y coordinate
 		
-		if( meth == 1) sync_vec[x,y] = compare(x,y,meth); //If meth == 1, store in the sync vector
-		else mel_vec[x,y] = compare(x,y,meth);
+		if( meth == 1) sync_vec[idx(x,y)] = compare(x,y,meth); //If meth == 1, store in the sync vector
+		else mel_vec[idx(x,y)] = compare(x,y,meth);
 
 	}
 	
