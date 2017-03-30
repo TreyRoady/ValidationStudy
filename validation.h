@@ -41,6 +41,13 @@ enum notes{ //Set the Frequencies for Tactor Tuning, dHz
 	E  = 3296
 };
 
+enum rests{
+	R4  = 400,
+	R8  = 300,
+	R16 = 150,
+	R32 = 75
+};
+
 
 int calcx(int indx, int n);       //Returns x value of an upper triangular index projection
 int calcy(int indx, int n,int x); //Returns y value of an upper triangular index projection

@@ -140,7 +140,6 @@ int present(int mthd, int sig){
 			play(B,4);
 			play(B,4);
 			play(B,4);
-			
 			return 1;
 			break;
 		case 2: // Sync 2
@@ -179,7 +178,7 @@ int present(int mthd, int sig){
 			//Sixteenth
 			play(B,16);
 			// Rest
-			Sleep(150);
+			Sleep(R16);
 			// Sixteenth
 			play(B,16);
 			// Eighth
@@ -217,13 +216,13 @@ int present(int mthd, int sig){
 		case 7:
 			play(B,16);
 			//rest 16;
-			Sleep(150);
+			Sleep(R16);
 			play(B,4);
 			//rest 8;
-			Sleep(300);
+			Sleep(R8);
 			play(B,16);
 			//rest 16;
-			Sleep(150);
+			Sleep(R16);
 			play(B,45);
 			return 1;
 			break;
@@ -249,7 +248,9 @@ int present(int mthd, int sig){
 			play(B,16);
 			play(B,16);
 			play(B,8);
-			Sleep(400); //Rest 8 + 16
+			//Rest 8 + 16
+			Sleep(R8);
+			Sleep(R16);
 			play(B,4);
 			play(B,8);
 			play(B,85);
@@ -265,60 +266,102 @@ int present(int mthd, int sig){
 		/////////////////////
 	case 1:
 		switch (sig){
-		case 0:
-			return 0;
-			break;
-		case 1: //Scale
-			SetSigSrc(0, 0, 1, 1, false);
-			SetSinFreq_Fine1(0, 0, F, false);
-			TacOnTime(0, 0, Tac1, 600, false);
-			Sleep(700);
-			SetSinFreq_Fine1(0, 0, A, false);
-			TacOnTime(0, 0, Tac1, 500, false);
-			Sleep(600);
-			SetSinFreq_Fine1(0, 0, C, false);
-			TacOnTime(0, 0, Tac1, 500, false);
-			Sleep(600);
-			SetSinFreq_Fine1(0, 0, E, false);
-			TacOnTime(0, 0, Tac1, 500, false);
-			Sleep(600);
-			SetSinFreq_Fine1(0, 0, E, false);
-			TacOnTime(0, 0, Tac1, 500, false);
-			Sleep(600);
-			SetSinFreq_Fine1(0, 0, C, false);
-			TacOnTime(0, 0, Tac1, 500, false);
-			Sleep(600);
-			SetSinFreq_Fine1(0, 0, A, false);
-			TacOnTime(0, 0, Tac1, 500, false);
-			Sleep(600);
-			SetSinFreq_Fine1(0, 0, F, false);
-			TacOnTime(0, 0, Tac1, 500, false);
-			Sleep(600);
+		case 0: // Whole Note
+			play(B,1);
 			return 1;
 			break;
-		case 2:
-			return 0;
+		case 1: //4 Alternating Quarter Notes
+			play(F,4);
+			play(C,4);
+			play(F,4);
+			play(C,4);
+			return 1;
 			break;
-		case 3:
-			return 0;
+		case 2: 
+			play(A,4);
+			play(C,4);
+			play(F,4);
+			play(C,16);
+			play(C,45);
+			return 1;
 			break;
-		case 4:
-			return 0;
+		case 3: // Shave & a Hair Cut
+			play(A,4);
+			play(G,8);
+			play(G,8);
+			play(Ab,4);
+			play(G,4);
+			//Quarter Rest
+			Sleep(R4);
+			play(B,4);
+			play(C,4);
+			return 1;
 			break;
-		case 5:
-			return 0;
+		case 4: // Mary had a Little Lamb
+			play(B,4);
+			play(B,4);
+			play(G,4);
+			play(A,4);
+			play(A,4);
+			play(B,4);
+			play(B,2);
+			play(A,4);
+			play(A,4);
+			play(A,2);
+			play(A,4);
+			play(A,4);
+			play(D,2);
+			return 1;
+			break;
+		case 5: // C Arpeggio
+			play(LC,8);
+			play(LE,8);
+			play(G, 8);
+			play(C, 8);
+			play(G, 8);
+			play(LE,8);
+			play(LC,4);
+			return 1;
 			break;
 		case 6:
-			return 0;
+			play(B,8);
+			play(C,4);
+			//Rest 8;
+			Sleep(R8);
+			play(G,16);
+			play(A,16);
+			play(F,4);
+			play(F,8);
+			return 1;
 			break;
 		case 7:
-			return 0;
+			play(A,8);
+			play(C,8);
+			play(F,8);
+			play(A,8);
+			play(F,85);
+			play(F,16);
+			play(F,4);
+			return 1;
 			break;
 		case 8:
-			return 0;
+			play(A,4);
+			play(B,8);
+			//rest 8
+			Sleep(R8);
+			play(G,8);
+			play(D,16);
+			play(B,16);
+			play(A,8);
+			return 1;
 			break;
 		case 9:
-			return 0;
+			play(F,45);
+			play(C,8);
+			Sleep(R8);
+			play(C,8);
+			play(F,4);
+			return 1;
 			break;
 		default:
 			return 0;
@@ -698,18 +741,18 @@ void output(int stor_mat[9][9], std::ofstream &outfile){
 void play(int note, int length){ // notes handled by Enum.
 	SetSinFreq_Fine1(0, 0, note, false);
 	switch(length){
-	case 1: //Whole Note
+	case 1:  //Whole Note
 		TacOnTime(0, 0, Tac1, 900, false);
 		Sleep(1000);
 		break;
-	case 2: // Half Note
+	case 2:  // Half Note
 		TacOnTime(0, 0, Tac1, 500, false);
 		Sleep(650);
 		break;
 	case 25: //Dotted Half
 		TacOnTime(0, 0, Tac1, 725, false);
 		Sleep(800);
-	case 4:
+	case 4:  //Quarter
 		TacOnTime(0, 0, Tac1, 250, false);
 		Sleep(400);
 		break;
@@ -717,7 +760,7 @@ void play(int note, int length){ // notes handled by Enum.
 		TacOnTime(0, 0, Tac1, 350, false);
 		Sleep(500);
 		break;
-	case 8: //Eighth
+	case 8:	 //Eighth
 		TacOnTime(0, 0, Tac1, 100, false);
 		Sleep(300);
 		break;
