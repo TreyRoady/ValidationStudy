@@ -10,6 +10,9 @@ This study's goal is to identify a candidate signal set which demonstrates a str
 (A > B, B > C, ergo A > C). The signals will then be used to determine how many levels of vibrational signal pilots
 can interpret while under cognitive load.
 
+Please note: Code is incomplete and will not compile, as relevant Bluetooth and DLLs are missing and are specific to
+the proprietary hardware.
+
 
 Current Version: 
 - All signals are programmed and tested.
