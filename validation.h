@@ -14,7 +14,7 @@
 #include "tactor_cHeader.h"
 #include <iostream>
 
-enum notes{ //Set the Frequencies for Tactor Tuning, dHz
+enum notes{ //Set the Frequencies for Tactor Tuning, in deciHz
 	//http://www.phy.mtu.edu/~suits/notefreqs.html
 	LE = 1648,
 	LEb= 1556,
@@ -42,10 +42,12 @@ enum notes{ //Set the Frequencies for Tactor Tuning, dHz
 };
 
 enum rests{
-	R4  = 400,
-	R8  = 300,
-	R16 = 150,
-	R32 = 75
+	R4   = 400,
+	R45  = 500,
+	R8   = 300,
+	R85  = 350,
+	R16  = 150,
+	R32  = 75
 };
 
 

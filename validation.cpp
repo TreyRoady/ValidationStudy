@@ -49,7 +49,7 @@ int main()
 		m = toupper(m);
 		switch(m){
 		case 'A':
-			ConnectDirect("\\.\COM40", Serial);
+			ConnectDirect("\\.\COM40", Serial); // Weird escape deals with squirrely Windows COM ports.
 			l = 1;
 			break;
 		case 'B':
@@ -143,23 +143,15 @@ int present(int mthd, int sig){
 			return 1;
 			break;
 		case 2: // Sync 2
-			SetSinFreq_Fine1(0, 0, B, false);
-			SetSigSrc(0, 0, 1, 1, false);
-			TacOnTime(0, 0, Tac1, 500, false);
-			Sleep(900);
-
-			TacOnTime(0, 0, Tac1, 100, false);
-			Sleep(250);
-			TacOnTime(0, 0, Tac1, 100, false);
-			Sleep(250);
-			TacOnTime(0, 0, Tac1, 100, false);
-			Sleep(250);
-
-			TacOnTime(0, 0, Tac1, 500, false);
-			Sleep(800);
-
-			TacOnTime(0, 0, Tac1, 500, false);
-			Sleep(400);
+			play(B,16);
+			play(B,16);
+			play(B,8);
+			//Rest 8 + 16
+			Sleep(R8);
+			Sleep(R16);
+			play(B,4);
+			play(B,8);
+			play(B,85);
 			return 1;
 			break;
 		case 3: // Sync 3
@@ -299,17 +291,17 @@ int present(int mthd, int sig){
 			break;
 		case 4: // Mary had a Little Lamb
 			play(B,4);
-			play(B,4);
+			play(A,4);
 			play(G,4);
 			play(A,4);
-			play(A,4);
+			play(B,4);
 			play(B,4);
 			play(B,2);
 			play(A,4);
 			play(A,4);
 			play(A,2);
-			play(A,4);
-			play(A,4);
+			play(B,4);
+			play(D,4);
 			play(D,2);
 			return 1;
 			break;
@@ -339,7 +331,7 @@ int present(int mthd, int sig){
 			play(C,8);
 			play(F,8);
 			play(A,8);
-			play(F,85);
+			play(F,8);
 			play(F,16);
 			play(F,4);
 			return 1;
@@ -376,17 +368,17 @@ int present(int mthd, int sig){
 		switch (sig){
 		case 0: //1. Mary had a Little Lamb
 			play(B,4);
-			play(B,4);
+			play(A,4);
 			play(G,4);
 			play(A,4);
-			play(A,4);
+			play(B,4);
 			play(B,4);
 			play(B,2);
 			play(A,4);
 			play(A,4);
 			play(A,2);
-			play(A,4);
-			play(A,4);
+			play(B,4);
+			play(D,4);
 			play(D,2);
 			return 1;
 			break;
@@ -404,7 +396,7 @@ int present(int mthd, int sig){
 			
 			play(G,16);
 			play(G,16);
-			play(E,8);
+			play(LE,8);
 			play(LC,8);
 			play(LC,8);
 			play(C,16);
@@ -534,19 +526,19 @@ int present(int mthd, int sig){
 			return 1;
 			break;
 		case 8: //9. Incy Wincy Spider
-			play(F,8);
-			play(A,4);
+			play(LD,8);
+			play(G,4);
+			play(G,8);
+			play(G,4);
 			play(A,8);
-			play(A,4);
-			play(B,8);
-			play(C,45);
-			play(C,4);
-			play(C,8);
-			play(B,8);
-			play(A,8);
+			play(B,45);
 			play(B,4);
-			play(C,8);
-			play(A,25);
+			play(B,8);
+			play(A,8);
+			play(G,8);
+			play(A,4);
+			play(B,8);
+			play(G,25);
 			
 			return 1;
 			break;
@@ -579,7 +571,7 @@ int present(int mthd, int sig){
 		}
 		break;
 	}
-}
+}	
 
 int compare(int x, int y, int mthd){
 	//Function returns 0 if x > y, 1 if x == y, 2 if x < y.
@@ -765,10 +757,10 @@ void play(int note, int length){ // notes handled by Enum.
 		Sleep(300);
 		break;
 	case 85: //Dotted-Eighth
-		TacOnTime(0, 0, Tac1, 175, false);
-		Sleep(350);
+		TacOnTime(0, 0, Tac1, 220, false);
+		Sleep(400); //from 400
 	case 16: // 16th
-		TacOnTime(0, 0, Tac1, 50, false);
+		TacOnTime(0, 0, Tac1, 65, false);
 		Sleep(150);
 		break;
 	case 32:
