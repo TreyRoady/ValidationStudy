@@ -1,6 +1,7 @@
 # ValidationStudy
 Experimental treatment files for FAA research into vibrotactile signals.
 
+Current version: 0.9 -> Pre Pilot Study
 
 Study is currently comparing vibrotactile signals that vary based on frequency and temporal spacing.
 Additionally, we'll be validating whether individuals can interpret vibrotactile music and identify familiar songs.
@@ -11,7 +12,6 @@ can interpret while under cognitive load.
 
 
 Current Version: 
-- All signals are currently programmed in.
-- Probably needs expansion of the rest enumeration to fit into each signal for tweaking
-- Needs pilot testing to verify reliability of study
+- All signals are programmed and tested.
+- Needs pilot testing to verify study reliability
 
