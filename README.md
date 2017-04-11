@@ -1,7 +1,14 @@
 # ValidationStudy
 Experimental treatment files for FAA research into vibrotactile signals.
 
-Current version: 0.9 -> Pre Pilot Study
+Current version: 1.0
+- Disabled EAI 16 in code. EAI 17 is sufficient for the test.
+- Completed tests to ensure reliability for study.
+- Disabled numerical display for signals to prevent participant bias based on signal order
+
+Previous version notes: 
+
+0.9 -> Pre Pilot Study
 
 Study is currently comparing vibrotactile signals that vary based on frequency and temporal spacing.
 Additionally, we'll be validating whether individuals can interpret vibrotactile music and identify familiar songs.
