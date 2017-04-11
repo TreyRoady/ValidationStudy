@@ -43,34 +43,52 @@ int main()
 	std::getline(std::cin, subject);
 	char m;
 	int l=0;
-	while(l == 0){
-		std::cout << "\nAre you using tactor set A.) 16 or B.) 17?: ";
-		std::cin >> m;
-		m = toupper(m);
-		switch(m){
-		case 'A':
-			ConnectDirect("\\.\COM40", Serial); // Weird escape deals with squirrely Windows COM ports.
-			l = 1;
-			break;
-		case 'B':
-			ConnectDirect("COM9", Serial);
+	//while(l == 0){
+	//	std::cout << "\nAre you using tactor set A.) 16 or B.) 17?: ";
+	//	std::cin >> m;
+	//	m = toupper(m);
+	//	switch(m){
+	//	case 'A':
+	//		ConnectDirect("\\.\COM40", Serial); // Weird escape deals with squirrely Windows COM ports.
+	//		l = 1;
+	//		break;
+	//	case 'B':
+	//		ConnectDirect("COM9", Serial);
+	//		l = 1;
+	//		break;
+	//	default:
+	//		std::cout << std::endl << std::endl << "Please select either A or B." << std::endl;
+	//		l = 0;
+	//	}
+	//	
+	//}
+	ConnectDirect("COM9", Serial); //Connect to EAI 17
+	std::cout << "Tactors connected!" << std::endl;
+	Sleep(1000);
+
+	l = 0;
+	while(l==0){
+		ClearScreen();
+		std::cout << std::endl << "Start with Treatment 1 (Syncopated) or Treatment 2 (Melodic)?: ";
+		std::cin >> meth;
+		meth = meth - 1;
+		switch(meth){ //Error processing for input
+		case 0:
+		case 1:
 			l = 1;
 			break;
 		default:
-			std::cout << std::endl << std::endl << "Please select either A or B." << std::endl;
 			l = 0;
+			break;
 		}
 		
 	}
 
-	std::cout << std::endl << "Start with Treatment 1 (Syncopated) or Treatment 2 (Melodic)?: ";
-	std::cin >> meth;
-	meth = meth - 1;
-
 	std::ofstream outfile;
 	subject = subject + ".csv";
 	outfile.open(subject);
-
+	ClearScreen(); //clear the screen
+	
 	treatment(meth,outfile);
 
 	std::cout << std::endl << std::endl << std::endl;
@@ -80,15 +98,24 @@ int main()
 	std::cin.get();
 	std::cout << "Beginning Musical Test treatment" << std::endl << std::endl;
 	Sleep(1000);
-	treatment(2,outfile);
+	ClearScreen();
+	treatment(2,outfile); //Give musical treatment
 
+	ClearScreen();
 	std::cout << "Completed Treatment." << std::endl << std::endl;
 	Sleep(1000);
 	std::cout << "Hit any key when prepared to continue:";
-	Sleep(1000);
-	if(meth==1) meth = 0;
-	if(meth==0) meth = 1;
+	std::cin.get();
+
+	if(meth==1){ 
+		meth = 0;
+	}
+	else{
+		if(meth==0) meth = 1;
+	}
+	ClearScreen();
 	treatment(meth,outfile);
+	ClearScreen();
 	std::cout <<"Study completed!" << std::endl << std::endl;
 	std::cout << "Thank you for your participation. Please be sure to sign the compensation form" << std::endl << std::endl;
 	Sleep(1000);
@@ -117,12 +144,13 @@ int calcy(int indx, int n,int x){
 int present(int mthd, int sig){
 	//Presents Signal # from the correct method (Syncopated or Melodic)
 	//  -> This should likely be adapted as a header
-
+	
 	//Returns 1 if signal exists, returns 0 if not.
 	if(InitTactorDLL() == -1)
 	{
 		std::cout << "ERROR DURING INIT\n";
 	}
+	SetGain(0,0,4,0,false); //Set gain to max!
 
 	switch (mthd){
 		// mthd == 0 
@@ -289,7 +317,7 @@ int present(int mthd, int sig){
 			play(C,4);
 			return 1;
 			break;
-		case 4: // Mary had a Little Lamb
+		case 4: // Mary had a Little Lamb, 1st measure
 			play(B,4);
 			play(A,4);
 			play(G,4);
@@ -297,12 +325,7 @@ int present(int mthd, int sig){
 			play(B,4);
 			play(B,4);
 			play(B,2);
-			play(A,4);
-			play(A,4);
-			play(A,2);
-			play(B,4);
-			play(D,4);
-			play(D,2);
+			
 			return 1;
 			break;
 		case 5: // C Arpeggio
@@ -573,48 +596,6 @@ int present(int mthd, int sig){
 	}
 }	
 
-int compare(int x, int y, int mthd){
-	//Function returns 0 if x > y, 1 if x == y, 2 if x < y.
-
-	char n; //User character response
-	int m = -2;  //Function return value
-	//While loop to keep presenting signals until an option is checked	
-	while (m == -2){
-		//present signal x
-		std::cout << "Signal " << x << std::endl;
-		present(x, mthd);
-		//present signal 2
-		std::cout << "Signal " << y << std::endl;
-		present(y, mthd);
-		//Present option menu
-		std::cout << "\nPlease select a response:" << std::endl;
-		std::cout << "\tA.) Signal 1 > Signal 2" << std::endl;
-		std::cout << "\tB.) Signal 1 = Signal 2" << std::endl;
-		std::cout << "\tC.) Signal 1 < Signal 3" << std::endl;
-
-		std::cout << "\nSelect any other option to repeat" << std::endl;
-		//Get user response:
-		std::cin >> n;
-
-		switch (n){
-		case 'A':
-			m = 0;
-			break;
-		case 'B':
-			m = 1;
-			break;
-		case 'C':
-			m = 2;
-			break;
-		default:
-			std::cout << "\nRepeating" << std::endl << std::endl;
-			break;
-		}
-	}
-
-	return m;
-}
-
 void treatment(int meth, std::ofstream &outfile){
 	//Initialize variables
 	std::vector<int> indx_vec; //Randomized vector of index values
@@ -627,16 +608,28 @@ void treatment(int meth, std::ofstream &outfile){
 	//Run Treatment
 	switch (meth){
 	case 0: //Syncopation
+		outfile << "Syncopated" << std::endl;
+		for (unsigned int a = 0; a < 45; a++){
+			x = calcx(indx_vec[a], 9);   //Project randomized index onto x coordinate
+			y = calcy(indx_vec[a], 9, x); //Project randomized index onto y coordinate
+
+			stor_mat[x][y] = compare(x,(y+1), 0); //Store x and y in the correct method section; (y+1) to correct for off-by-one in the matrix
+			// y + 1 prevents self-comparison and uses 9 at the end of the signal.
+			//Comparison should be x={0,1,2,3,4,5,6,7,8} and y = {1,2,3,4,5,6,7,8,9}
+
+		}
+		break;
 	case 1: //Melodic
-		if (meth == 0) outfile << "Syncopated" << std::endl << std::endl;
-		if (meth == 1) outfile << "Melodic" << std::endl << std::endl;
+		outfile << "Melodic" << std::endl;
 
 		//Go through each unique presentation combination, based on indx_vec
 		for (unsigned int a = 0; a < 45; a++){
 			x = calcx(indx_vec[a], 9);   //Project randomized index onto x coordinate
 			y = calcy(indx_vec[a], 9, x); //Project randomized index onto y coordinate
 
-			stor_mat[x][y] = compare(x, y, meth); //Store x and y in the correct method section
+			stor_mat[x][y] = compare(x,(y+1), 1); //Store x and y in the correct method section; (y+1) to correct for off-by-one in the matrix
+			// y + 1 prevents self-comparison and uses 9 at the end of the signal.
+			//Comparison should be x={0,1,2,3,4,5,6,7,8} and y = {1,2,3,4,5,6,7,8,9}
 
 		}
 		output(stor_mat, outfile);
@@ -651,7 +644,7 @@ void treatment(int meth, std::ofstream &outfile){
 			{"Mary Had a Little Lamb",			 "Frere Jacques",						"Bingo",							  "The Incy-Wincy Spider"},				//0: Mary Had a Little Lamb (0)
 			{"Sing a Song of Sixpence",			 "The Wheels on the Bus",				"On Top of Spaghetti",				  "Here We Go Round the Mulberry Bush"},//1: Here We Go Round the Mulberry Bush (3)
 			{"Ring Around the Rosy",			 "Hot Cross Buns",						"Chopsticks",						  "Baa Baa Black Sheep" },				//2: Ring Around the Rosy (0)
-			{ "Yankee Doodle",					 "Twinkle Twinkle Little Star",			"Ode to Joy",						  "I'm A Little Teapot" },				//3: Twinkle Twinkle Little Star (1) 
+			{"Yankee Doodle",					 "Twinkle Twinkle Little Star",			"Ode to Joy",						  "I'm A Little Teapot" },				//3: Twinkle Twinkle Little Star (1) 
 			{"Frere Jacques",					 "Hickory Dickory Dock",				"Hot Cross Buns",					  "The Incy-Wincy Spider"},				//4: Frere Jacques (0)
 			{"Head, Shoulders, Knees, and Toes", "Hot Cross Buns",						"Frere Jacques",					  "Bingo" },							//5: Bingo (3)
 			{"I'm A Little Teapot",				 "Baa Baa Black Sheep",					"Old MacDonald",					  "Head, Shoulders, Knees, and Toes" }, //6: Old MacDonald (2)
@@ -661,20 +654,22 @@ void treatment(int meth, std::ofstream &outfile){
 		};
 		
 		char n; //User character response
-		int m = -2;  //Function return value
+		
 
 		for (int i = 0; i < 10; i++){
+			int m = -2;  //Function return value, resets after a good response
 			while (m == -2){
 				//present signal i
+				ClearScreen();
 				std::cout << "Song " << i + 1;
 				present(2, i);
 
 				//Present option menu
 				std::cout << "\nPlease select a response:" << std::endl;
-				std::cout << "\tA.) " << opt[i][1] << std::endl;
-				std::cout << "\tB.) " << opt[i][2] << std::endl;
-				std::cout << "\tC.) " << opt[i][3] << std::endl;
-				std::cout << "\tD.) " << opt[i][4] << std::endl;
+				std::cout << "\tA.) " << opt[i][0] << std::endl;
+				std::cout << "\tB.) " << opt[i][1] << std::endl;
+				std::cout << "\tC.) " << opt[i][2] << std::endl;
+				std::cout << "\tD.) " << opt[i][3] << std::endl;
 
 				std::cout << "\nSelect any other option to repeat" << std::endl;
 				//Get user response:
@@ -695,6 +690,7 @@ void treatment(int meth, std::ofstream &outfile){
 					m = 3;
 					break;
 				default:
+					ClearScreen();
 					std::cout << "\nRepeating" << std::endl << std::endl;
 					break;
 				}
@@ -702,29 +698,92 @@ void treatment(int meth, std::ofstream &outfile){
 
 				//output results to outfile
 				//output(song_mat)
-				break;
 
-			} // End of loop through all 10 songs
-			outfile << "Song Identification" << std::endl << std::endl;
-			for (int i = 0; i < 10; i++){
-				if (song_mat[i] == answers[i]) {
-					outfile << 1 << std::endl;
-				}
-				else outfile << 0 << std::endl << std::endl;
+			} 
+		}// End of loop through all 10 songs
+		outfile << "Song Identification" << std::endl << std::endl;
+		for (int i = 0; i < 10; i++){
+			if (song_mat[i] == answers[i]) {
+				outfile << 1 << std::endl;
 			}
+			else outfile << 0 << std::endl;
 		}
+		break; //End Case 2
 	}
 }
+
+int compare(int x, int y, int mthd){
+	//Function returns 0 F(x) > F(y), 1 if F(x) == F(y), 2 if F(x) < F(y).
+
+	char n; //User character response
+	int m = -2;  //Function return value
+	//While loop to keep presenting signals until an option is checked	
+	while (m == -2){
+		ClearScreen();
+		//present signal x
+		std::cout << "Signal A" << std::endl;
+		present(mthd,x);
+		Sleep(500);
+		//present signal 2
+		std::cout << "Signal B" << std::endl;
+		present(mthd,y);
+		Sleep(500);
+		//Present option menu
+		std::cout << "\nPlease select a response:" << std::endl;
+		std::cout << "\tA.) Signal A greater than Signal B" << std::endl;
+		std::cout << "\tB.) Signal A equal to Signal B" << std::endl;
+		std::cout << "\tC.) Signal A less than Signal B" << std::endl;
+
+		std::cout << "\nSelect any other option to repeat" << std::endl;
+		//Get user response:
+		std::cin >> n;
+		n = toupper(n);
+		switch (n){
+		case 'A':
+			m = 0;
+			break;
+		case 'B':
+			m = 1;
+			break;
+		case 'C':
+			m = 2;
+			break;
+		default:
+			ClearScreen();
+			std::cout << "\nRepeating" << std::endl << std::endl;
+			break;
+		}
+	}
+
+	return m;
+}
+
 
 void output(int stor_mat[9][9], std::ofstream &outfile){
 	//Takes: 9x9 matrix & the file stream for the .csv
 	//Outputs: Upper triangular matrix formatted data
 	
+	//Tested: prints out [0..44] indices in upper triangular
+		//Test matrix: 
+		/*
+		int test_mat[9][9] = {  //Set index
+		{0, 1,  2,  3,  4,  5,  6,  7,  8},
+		{0, 9, 10, 11, 12, 13, 14, 15, 16},
+		{0, 0, 17, 18, 19, 20, 21, 22, 23},
+		{0, 0,  0, 24, 25, 26, 27, 28, 29},
+		{0, 0,  0,  0, 30, 31, 32, 33, 34},
+		{0, 0,  0,  0,  0, 35, 36, 37, 38},
+		{0, 0,  0,  0,  0,  0, 39, 40, 41},
+		{0, 0,  0,  0,  0,  0,  0, 42, 43},
+		{0, 0,  0,  0,  0,  0,  0,  0, 44}
+		};
+		*/
+
 	//Print out the results
-	for (int i = 0; i<9; i++){ //iterate across x
-		for (int j = 0; j<9; j++){ // iterate across y
-			if (j >= i) outfile << stor_mat[i][j];
-			if (j<8) outfile << ",";
+	for (int i = 0; i < 9; i++){ //iterate across x 
+		for (int j = 0; j < 9; j++){ // iterate across y
+			if (j >= i) outfile << stor_mat[i][j]; //Not sure if j >= or just >
+			if (j < 8) outfile << ",";
 		}
 		outfile << std::endl;
 	}
@@ -732,6 +791,7 @@ void output(int stor_mat[9][9], std::ofstream &outfile){
 
 void play(int note, int length){ // notes handled by Enum.
 	SetSinFreq_Fine1(0, 0, note, false);
+	SetSigSrc(0,0,1,1,false);  //Set source to Freq1
 	switch(length){
 	case 1:  //Whole Note
 		TacOnTime(0, 0, Tac1, 900, false);
@@ -768,3 +828,39 @@ void play(int note, int length){ // notes handled by Enum.
 		Sleep(75);
 	}
 }
+
+void ClearScreen(){
+  HANDLE                     hStdOut;
+  CONSOLE_SCREEN_BUFFER_INFO csbi;
+  DWORD                      count;
+  DWORD                      cellCount;
+  COORD                      homeCoords = { 0, 0 };
+
+  hStdOut = GetStdHandle( STD_OUTPUT_HANDLE );
+  if (hStdOut == INVALID_HANDLE_VALUE) return;
+
+  /* Get the number of cells in the current buffer */
+  if (!GetConsoleScreenBufferInfo( hStdOut, &csbi )) return;
+  cellCount = csbi.dwSize.X *csbi.dwSize.Y;
+
+  /* Fill the entire buffer with spaces */
+  if (!FillConsoleOutputCharacter(
+    hStdOut,
+    (TCHAR) ' ',
+    cellCount,
+    homeCoords,
+    &count
+    )) return;
+
+  /* Fill the entire buffer with the current colors and attributes */
+  if (!FillConsoleOutputAttribute(
+    hStdOut,
+    csbi.wAttributes,
+    cellCount,
+    homeCoords,
+    &count
+    )) return;
+
+  /* Move the cursor home */
+  SetConsoleCursorPosition( hStdOut, homeCoords );
+  }
